@@ -1,0 +1,52 @@
+<div class="flight-search">
+
+  <div class="search-form">
+    <div class="form-group">
+      <label for="flightNumber">Flight Number</label>
+      <input 
+        id="flightNumber"
+        type="text" 
+        [(ngModel)]="searchCriteria.flightNumber"
+        placeholder="e.g., AA123"
+        class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="airline">Airline</label>
+      <input 
+        id="airline"
+        type="text" 
+        [(ngModel)]="searchCriteria.airline"
+        placeholder="e.g., Singapore Airlines"
+        class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select 
+        id="status"
+        [(ngModel)]="searchCriteria.status"
+        class="form-control">
+        <option *ngFor="let option of statusOptions" [value]="option.value">
+          {{ option.display }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button 
+        type="button" 
+        (click)="onSearch()"
+        class="btn btn-primary">
+        Search Flights
+      </button>
+      
+      <button 
+        type="button" 
+        (click)="onClear()"
+        class="btn btn-secondary">
+        Clear
+      </button>
+    </div>
+  </div>
+</div>

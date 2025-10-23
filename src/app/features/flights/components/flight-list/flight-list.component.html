@@ -1,0 +1,160 @@
+<div class="flight-management">
+  <!-- Search Component -->
+  <app-flight-search (search)="onSearch($event)" (clear)="onClearSearch()">
+  </app-flight-search>
+
+  <!-- Error Toast Component -->
+  <app-error-toast
+    [message]="errorMessage"
+    [visible]="showError"
+    [type]="'error'"
+    [duration]="5000"
+    (dismissed)="onErrorDismissed()"
+  >
+  </app-error-toast>
+  <!-- Success Toast -->
+  <app-error-toast
+    [message]="successMessage"
+    [visible]="showSuccess"
+    [type]="'success'"
+    [duration]="3000"
+    (dismissed)="onSuccessDismissed()"
+  >
+  </app-error-toast>
+
+  <!-- Results Section -->
+  <div class="results-section">
+    <div class="results-header">
+      <h4>
+        {{ hasActiveSearch ? "Search Results" : "All Flights" }}
+        <span class="result-count">({{ totalElements }} flights)</span>
+      </h4>
+
+      <!-- Active search indicator -->
+      <div *ngIf="hasActiveSearch" class="active-search">
+        <span class="search-badge">
+          Active Search
+          <button (click)="onClearSearch()" class="clear-search-btn">x</button>
+        </span>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading flights...</p>
+    </div>
+
+    <!-- Flight Table -->
+    <table *ngIf="!isLoading" class="flight-table">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Flight Number</th>
+          <th>Airline</th>
+          <th>Destination</th>
+          <th>Gate</th>
+          <th>Departure Time</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let flight of flights">
+          <td>
+            <a class="action-link" [routerLink]="['/flights', flight.id]">{{ flight.id }}</a>
+          </td>
+          <td>{{ flight.flightNumber }}</td>
+          <td>{{ flight.airline }}</td>
+          <td>{{ flight.destination }}</td>
+          <td>{{ flight.gate }}</td>
+          <td>{{ flight.departureTime | flightDate }}</td>
+          <td>
+            <span class="status-badge status-{{ flight.status | lowercase }}">
+              {{ flight.status | flightStatus }}
+            </span>
+          </td>
+          <td>
+            <div class="action-links">
+              <a
+                [routerLink]="['/flights', flight.id, 'edit']"
+                class="action-link edit"
+              >
+                Update
+              </a>
+              <a
+                href="#"
+                (click)="openDeleteConfirmation(flight.id, $event)"
+                class="action-link delete"
+              >
+                Delete
+              </a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- No Results -->
+    <div *ngIf="!isLoading && flights.length === 0" class="no-results">
+      <p>No flights found.</p>
+    </div>
+
+    <!-- Create FAB Button -->
+    <button class="fab" (click)="navigateToCreate()" title="Create New Flight">
+      <span class="fab-icon">+</span>
+      <span class="fab-text">New Flight</span>
+    </button>
+
+    <!-- Pagination -->
+    <div *ngIf="!isLoading && flights.length > 0" class="pagination">
+      <button
+        (click)="onPageChange(currentPage - 1)"
+        [disabled]="currentPage === 0"
+        class="pagination-btn"
+      >
+        Previous
+      </button>
+
+      <span class="page-info">
+        Page {{ currentPage + 1 }} of {{ totalPages }}
+      </span>
+
+      <button
+        (click)="onPageChange(currentPage + 1)"
+        [disabled]="currentPage >= totalPages - 1"
+        class="pagination-btn"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Dialog -->
+<div *ngIf="showConfirmationDeleteDialog" class="confirmation-dialog-overlay">
+  <div class="confirmation-dialog">
+    <h3>Confirm Delete</h3>
+    <p>
+      Are you sure you want to delete this flight? This action cannot be undone.
+    </p>
+    <div class="dialog-actions">
+      <button
+        type="button"
+        (click)="confirmDelete(flightToDelete!)"
+        class="btn btn-danger"
+        [disabled]="isLoading"
+      >
+        {{ isLoading ? "Deleting..." : "Yes" }}
+      </button>
+      <button
+        type="button"
+        (click)="cancelDelete()"
+        class="btn btn-secondary"
+        [disabled]="isLoading"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

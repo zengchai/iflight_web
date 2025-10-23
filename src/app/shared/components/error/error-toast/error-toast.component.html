@@ -1,0 +1,13 @@
+<div *ngIf="visible" class="error-toast" [class]="type">
+  <div class="error-content">
+    <span class="error-message">{{ message }}</span>
+    <button
+      *ngIf="dismissible"
+      (click)="onDismiss()"
+      class="error-close-btn"
+      type="button"
+    >
+      x
+    </button>
+  </div>
+</div>

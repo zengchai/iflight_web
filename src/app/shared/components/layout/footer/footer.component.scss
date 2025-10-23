@@ -1,0 +1,47 @@
+.app-footer {
+  background: #1a202c;
+  color: white;
+  padding: 1rem 0 2rem 0;
+  display: flex;
+  justify-content: center;
+
+  .footer-content {
+    justify-content: center;
+    align-items: center;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 1rem;
+      text-align: center;
+    }
+  }
+  
+  .logo {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: linear-gradient(45deg, #fff, #a8d8ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  
+  .footer-center {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    
+    .footer-link {
+      color: #cbd5e0;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.3s ease;
+      cursor: pointer;
+      
+      &:hover {
+        color: #4299e1;
+      }
+    }
+  }
+}
